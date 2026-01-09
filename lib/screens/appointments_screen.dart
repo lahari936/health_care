@@ -240,7 +240,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
           onSelectItem: (item) {
             Navigator.pop(context);
           },
-          isVisible: true,
+          //isVisible: true,
           onClose: () {
             Navigator.pop(context);
           },
