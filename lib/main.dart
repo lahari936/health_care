@@ -1,7 +1,10 @@
+import 'package:agenx/screens/patients_screen.dart';
 import 'package:flutter/material.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/appointments_screen.dart';
 import 'widgets/sidebar.dart';
+import 'screens/prescription_screen.dart';
+import 'screens/patients_list_screen.dart';
 
 void main() {
   runApp(LiveSureApp());
@@ -14,6 +17,8 @@ class LiveSureApp extends StatefulWidget {
 
 class _LiveSureAppState extends State<LiveSureApp> {
   String selectedScreen = 'dashboard';
+  String? selectedPatientId;
+
   //bool sidebarOpen = false;
 
   //void toggleSidebar() {
@@ -25,7 +30,16 @@ class _LiveSureAppState extends State<LiveSureApp> {
   void selectScreen(String screen) {
     setState(() {
       selectedScreen = screen;
+      // Clear selected patient whenever we navigate away from a patient
+      if (screen != 'patient') selectedPatientId = null;
       //sidebarOpen = false;
+    });
+  }
+
+  void selectPatient(String patientId) {
+    setState(() {
+      selectedScreen = 'patient';
+      selectedPatientId = patientId;
     });
   }
 
@@ -33,10 +47,18 @@ class _LiveSureAppState extends State<LiveSureApp> {
   Widget build(BuildContext context) {
     Widget content;
     if (selectedScreen == 'dashboard') {
-      // FIXED: ONLY pass onHamburger as per DashboardScreen definition
       content = DashboardScreen();
     } else if (selectedScreen == 'appointments') {
       content = AppointmentsScreen();
+    } else if (selectedScreen == 'patients_list') {
+      content = PatientsListScreen(onSelectPatient: selectPatient);
+    } else if (selectedScreen == 'patient') {
+      content = PatientsScreen(
+        patientId: selectedPatientId ?? '',
+        onBack: () => selectScreen('patients_list'),
+      );
+    } else if (selectedScreen == 'prescription') {
+      content = PrescriptionScreen();
     } else {
       content = Container(); // In case you add other screens
     }
@@ -83,7 +105,9 @@ class SidebarWidget extends StatelessWidget {
         return 'Dashboard';
       case 'appointments':
         return 'Appointments';
-      case 'patients':
+      // both list and detail should keep sidebar highlighted as Patients
+      case 'patients_list':
+      case 'patient':
         return 'Patients';
       case 'prescription':
         return 'Prescription';
@@ -119,12 +143,14 @@ class SidebarWidget extends StatelessWidget {
           case 'appointments':
             onSelectScreen('appointments');
             break;
+          // Open patients list by default when Patients is clicked
           case 'patients':
-            onSelectScreen('patients');
+            onSelectScreen('patients_list');
             break;
           case 'prescription':
             onSelectScreen('prescription');
             break;
+
           case 'messages':
             onSelectScreen('messages');
             break;

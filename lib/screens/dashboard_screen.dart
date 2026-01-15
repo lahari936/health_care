@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/add_appointment_popup.dart';
 import '../widgets/section_wrapper.dart';
+import '../widgets/add_appointment_popup.dart';
+import '../widgets/add_new_patient_dialog.dart';
 
 class _DashboardTopBar extends StatelessWidget {
   //final VoidCallback onMenuTap;
@@ -822,7 +824,14 @@ class QuickActionsCard extends StatelessWidget {
           QuickActionButton(
             icon: Icons.person_add_alt_1,
             text: 'New Patient',
-            onTap: () {},
+            //onTap: () {},
+            onTap: () {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) => const AddNewPatientDialog(),
+              );
+            },
           ),
           const SizedBox(height: 10),
           QuickActionButton(

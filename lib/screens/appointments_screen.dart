@@ -424,7 +424,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                             _tableHeader("Appointment Type", 2),
                             _tableHeader("Slot", 2),
                             _tableHeader("Mode", 2),
-                            _tableHeader("Status", 1),
+                            _tableHeader("Status", 2),
                             _tableHeader("Quick Actions", 3),
                           ],
                         ),
@@ -447,7 +447,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                     radius: 22,
                                     backgroundImage: AssetImage(app['avatar']),
                                   ),
-                                  SizedBox(width: 12),
+                                  SizedBox(width: 10),
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
