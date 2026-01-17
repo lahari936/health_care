@@ -9,55 +9,101 @@ class PatientsListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: const Color(0xFFF6F8FB),
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _header(context),
-          const SizedBox(height: 20),
-          _patientsCard(),
-        ],
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isMobile = constraints.maxWidth < 600;
+
+        return Container(
+          color: const Color(0xFFF6F8FB),
+          padding: EdgeInsets.all(isMobile ? 12 : 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _header(context, isMobile),
+              SizedBox(height: isMobile ? 12 : 20),
+              _patientsCard(isMobile: isMobile),
+            ],
+          ),
+        );
+      },
     );
   }
 
   // ================= HEADER =================
-  Widget _header(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const Text(
-          'Patient Management',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-        ),
-        ElevatedButton.icon(
-          onPressed: () {
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (_) => const AddNewPatientDialog(),
-            );
-          },
-          icon: const Icon(Icons.person_add_alt_1, size: 18),
-          label: const Text('New Patient'),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFE8EBF2),
-            foregroundColor: Colors.black,
-            elevation: 0,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        ),
-      ],
-    );
+  Widget _header(BuildContext context, bool isMobile) {
+    return isMobile
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Patient Management',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (_) => const AddNewPatientDialog(),
+                    );
+                  },
+                  icon: const Icon(Icons.person_add_alt_1, size: 16),
+                  label: const Text('New Patient'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFE8EBF2),
+                    foregroundColor: Colors.black,
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          )
+        : Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Patient Management',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+              ),
+              ElevatedButton.icon(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (_) => const AddNewPatientDialog(),
+                  );
+                },
+                icon: const Icon(Icons.person_add_alt_1, size: 18),
+                label: const Text('New Patient'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFE8EBF2),
+                  foregroundColor: Colors.black,
+                  elevation: 0,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+            ],
+          );
   }
 
   // ================= MAIN CARD =================
-  Widget _patientsCard() {
+  Widget _patientsCard({bool isMobile = false}) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(

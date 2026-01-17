@@ -27,58 +27,68 @@ class _PatientsScreenState extends State<PatientsScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: const Color(0xFFF6F8FB),
-      padding: const EdgeInsets.all(20),
-      child: SingleChildScrollView(
-        controller: _scrollController,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isMobile = constraints.maxWidth < 600;
+
+        return Container(
+          color: const Color(0xFFF6F8FB),
+          padding: EdgeInsets.all(isMobile ? 12 : 20),
+          child: SingleChildScrollView(
+            controller: _scrollController,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: widget.onBack,
+                Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: widget.onBack,
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        'Patient Profile',
+                        style: TextStyle(
+                          fontSize: isMobile ? 18 : 22,
+                          fontWeight: FontWeight.w600,
+                          height: 1.15,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 6),
-                Text(
-                  'Patient Profile',
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w600,
-                    height: 1.15,
-                  ),
+                const SizedBox(height: 12),
+                _patientCard(context, isMobile),
+                const SizedBox(height: 18),
+                AnimatedSize(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                  child: _historyRevealed
+                      ? _medicalHistorySection(isMobile)
+                      : const SizedBox.shrink(),
+                ),
+                const SizedBox(height: 18),
+                AnimatedSize(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                  child: _historyRevealed
+                      ? _recentAppointmentsSection(isMobile)
+                      : const SizedBox.shrink(),
                 ),
               ],
             ),
-            const SizedBox(height: 12),
-            _patientCard(context),
-            const SizedBox(height: 18),
-            AnimatedSize(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-              child: _historyRevealed
-                  ? _medicalHistorySection()
-                  : const SizedBox.shrink(),
-            ),
-            const SizedBox(height: 18),
-            AnimatedSize(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-              child: _historyRevealed
-                  ? _recentAppointmentsSection()
-                  : const SizedBox.shrink(),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _patientCard(BuildContext context) {
+  Widget _patientCard(BuildContext context, bool isMobile) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(isMobile ? 12 : 20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -199,7 +209,7 @@ class _PatientsScreenState extends State<PatientsScreen>
     );
   }
 
-  Widget _medicalHistorySection() {
+  Widget _medicalHistorySection(bool isMobile) {
     Widget pair(String label, String value) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -272,7 +282,7 @@ class _PatientsScreenState extends State<PatientsScreen>
     );
   }
 
-  Widget _recentAppointmentsSection() {
+  Widget _recentAppointmentsSection(bool isMobile) {
     final rows = [
       ['2024-07-01', '10:00 AM', 'Check-up', 'Dr. Srujitha'],
       ['2024-06-15', '02:30 PM', 'Consultation', 'Dr. Srujitha'],
