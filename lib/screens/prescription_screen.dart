@@ -6,47 +6,96 @@ class PrescriptionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: const Color(0xFFF6F8FB),
-      child: Scrollbar(
-        thumbVisibility: true,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // ================= LEFT SECTION =================
-              Expanded(
-                flex: 3,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _pageHeader(context),
-                    const SizedBox(height: 16),
-                    _searchAndFilter(),
-                    const SizedBox(height: 16),
-                    _prescriptionList(),
-                  ],
-                ),
-              ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isMobile = constraints.maxWidth < 600;
+        final isTablet = constraints.maxWidth < 1024;
 
-              const SizedBox(width: 24),
+        return Container(
+          color: const Color(0xFFF6F8FB),
+          child: Scrollbar(
+            thumbVisibility: true,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: isMobile
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _pageHeader(context),
+                        const SizedBox(height: 16),
+                        _searchAndFilter(),
+                        const SizedBox(height: 16),
+                        _prescriptionList(),
+                        const SizedBox(height: 24),
+                        _quickActions(context),
+                        const SizedBox(height: 24),
+                        _recentActivity(),
+                      ],
+                    )
+                  : isTablet
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _pageHeader(context),
+                        const SizedBox(height: 16),
+                        _searchAndFilter(),
+                        const SizedBox(height: 16),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(flex: 2, child: _prescriptionList()),
+                            const SizedBox(width: 24),
+                            Expanded(
+                              flex: 1,
+                              child: Column(
+                                children: [
+                                  _quickActions(context),
+                                  const SizedBox(height: 24),
+                                  _recentActivity(),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    )
+                  : Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // ================= LEFT SECTION =================
+                        Expanded(
+                          flex: 3,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _pageHeader(context),
+                              const SizedBox(height: 16),
+                              _searchAndFilter(),
+                              const SizedBox(height: 16),
+                              _prescriptionList(),
+                            ],
+                          ),
+                        ),
 
-              // ================= RIGHT SECTION =================
-              Expanded(
-                flex: 2,
-                child: Column(
-                  children: [
-                    _quickActions(context),
-                    const SizedBox(height: 24),
-                    _recentActivity(),
-                  ],
-                ),
-              ),
-            ],
+                        const SizedBox(width: 24),
+
+                        // ================= RIGHT SECTION =================
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            children: [
+                              _quickActions(context),
+                              const SizedBox(height: 24),
+                              _recentActivity(),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 

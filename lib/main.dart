@@ -5,6 +5,9 @@ import 'screens/appointments_screen.dart';
 import 'widgets/sidebar.dart';
 import 'screens/prescription_screen.dart';
 import 'screens/patients_list_screen.dart';
+import 'screens/messages_screen.dart';
+import 'screens/billing_screen.dart';
+import 'screens/settings_screen.dart';
 
 void main() {
   runApp(LiveSureApp());
@@ -59,6 +62,12 @@ class _LiveSureAppState extends State<LiveSureApp> {
       );
     } else if (selectedScreen == 'prescription') {
       content = PrescriptionScreen();
+    } else if (selectedScreen == 'messages') {
+      content = MessagesScreen();
+    } else if (selectedScreen == 'billing') {
+      content = BillingScreen();
+    } else if (selectedScreen == 'settings') {
+      content = SettingsScreen();
     } else {
       content = Container(); // In case you add other screens
     }

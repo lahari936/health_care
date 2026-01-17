@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/sidebar.dart'; // Correct relative import
+import '../widgets/add_appointment_popup.dart';
 
 class AppointmentsScreen extends StatefulWidget {
   @override
@@ -61,8 +62,12 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
           .toList();
     if (selectedTab == 'Upcoming')
       return allAppointments
-          .where((app) =>
-              ["scheduled", "ongoing"].contains(app['status'].toString().toLowerCase()))
+          .where(
+            (app) => [
+              "scheduled",
+              "ongoing",
+            ].contains(app['status'].toString().toLowerCase()),
+          )
           .toList();
     if (selectedTab == 'Completed')
       return allAppointments
@@ -76,156 +81,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
   }
 
   void _showScheduleAppointmentDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (ctx) => Center(
-        child: Container(
-          width: 660,
-          padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 40),
-          decoration:
-              BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(30)),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Add New Appointment",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 26,
-                          color: Color(0xFF222B45),
-                        )),
-                    IconButton(
-                      icon: Icon(Icons.close, size: 28),
-                      onPressed: () => Navigator.pop(ctx),
-                    )
-                  ],
-                ),
-                SizedBox(height: 26),
-                // Row 1
-                Row(
-                  children: [
-                    _input("Patient Name", "patient full name search from list"),
-                    Spacer(),
-                    _input("Date of Birth", "auto-fetched", icon: Icons.calendar_today),
-                  ],
-                ),
-                SizedBox(height: 14),
-                // Row 2
-                Row(
-                  children: [
-                    _input("Patient ID", "auto-fetched"),
-                    SizedBox(width: 12),
-                    _input("Gender", "auto-fetched"),
-                    SizedBox(width: 12),
-                    _input("Age", "auto-calculated"),
-                    SizedBox(width: 12),
-                    _input("Blood Group", "auto-fetched"),
-                  ],
-                ),
-                SizedBox(height: 14),
-                // Row 3
-                Row(
-                  children: [
-                    _input("Email", "auto-fetched"),
-                    Spacer(),
-                    _input("Phone Number", "auto-fetched"),
-                  ],
-                ),
-                SizedBox(height: 14),
-                // Row 4
-                Row(
-                  children: [
-                    _input("Schedule Appointment", "dd/mm/yyyy", icon: Icons.calendar_today),
-                    Spacer(),
-                    _input("Appointment Type", "select from list"),
-                  ],
-                ),
-                SizedBox(height: 14),
-                // Row 5
-                Row(
-                  children: [
-                    _input("Appointment Time", "hh:mm (auto-generate AM / PM)", icon: Icons.access_time),
-                    Spacer(),
-                    _input("Appointment Mode", "select from list"),
-                  ],
-                ),
-                SizedBox(height: 28),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.symmetric(horizontal: 28),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(9)),
-                        foregroundColor: Color(0xFF222B45),
-                        backgroundColor: Color(0xFFF5F7FA),
-                      ),
-                      onPressed: () => Navigator.pop(ctx),
-                      child: Text("Cancel",
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                    ),
-                    SizedBox(width: 16),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                        backgroundColor: Color(0xFFEEF1F8),
-                        foregroundColor: Color(0xFF222B45),
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(9)),
-                      ),
-                      onPressed: () {}, // integrate logic if needed
-                      child: Text("Add Appointment",
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  static Widget _input(String label, String hint, {IconData? icon}) {
-    return SizedBox(
-      width: 225,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF222B45),
-                fontSize: 15,
-              )),
-          SizedBox(height: 5),
-          TextField(
-            decoration: InputDecoration(
-              hintText: hint,
-              hintStyle: TextStyle(
-                  color: Color(0xFF929292),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400),
-              filled: true,
-              fillColor: Color(0xFFF5F7FA),
-              suffixIcon: icon != null ? Icon(icon, color: Color(0xFFB0B0B0)) : null,
-              contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-              border: OutlineInputBorder(
-                borderSide: BorderSide.none,
-                borderRadius: BorderRadius.circular(11),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+    showDialog(context: context, builder: (ctx) => const AddAppointmentPopup());
   }
 
   @override
@@ -260,8 +116,13 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                   Padding(
                     padding: const EdgeInsets.only(right: 18),
                     child: IconButton(
-                        icon: Icon(Icons.menu, size: 28, color: Color(0xFF222B45)),
-                        onPressed: () => _scaffoldKey.currentState?.openDrawer()),
+                      icon: Icon(
+                        Icons.menu,
+                        size: 28,
+                        color: Color(0xFF222B45),
+                      ),
+                      onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+                    ),
                   ),
                 // CENTERED TITLE & PROFILE INFO
                 Expanded(
@@ -272,12 +133,14 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text('Appointments',
+                          Text(
+                            'Appointments',
                             style: TextStyle(
                               fontWeight: FontWeight.w700,
                               fontSize: 27,
                               color: Color(0xFF222B45),
-                            )),
+                            ),
+                          ),
                         ],
                       ),
                       Spacer(),
@@ -285,9 +148,17 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                   ),
                 ),
                 // PROFILE, NIGHT MODE, NOTIF ICONS ON RIGHT
-                Icon(Icons.nightlight_round, size: 26, color: Color(0xFFB2B2B2)),
+                Icon(
+                  Icons.nightlight_round,
+                  size: 26,
+                  color: Color(0xFFB2B2B2),
+                ),
                 SizedBox(width: 22),
-                Icon(Icons.notifications_none, size: 26, color: Color(0xFFB2B2B2)),
+                Icon(
+                  Icons.notifications_none,
+                  size: 26,
+                  color: Color(0xFFB2B2B2),
+                ),
                 SizedBox(width: 22),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -306,9 +177,19 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                           children: [
                             Text(
                               "Dr. Srujitha Koduri",
-                              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15, color: Color(0xFF222B45)),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 15,
+                                color: Color(0xFF222B45),
+                              ),
                             ),
-                            Text('General Practitioner', style: GoogleFonts.inter(color: Color(0xFF5c757D), fontSize: 11)),
+                            Text(
+                              'General Practitioner',
+                              style: GoogleFonts.inter(
+                                color: Color(0xFF5c757D),
+                                fontSize: 11,
+                              ),
+                            ),
                           ],
                         ),
                       ],
@@ -327,7 +208,10 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                     elevation: 0,
                   ),
                   onPressed: () => _showScheduleAppointmentDialog(context),
-                  child: Text("+ Schedule Appointment", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+                  child: Text(
+                    "+ Schedule Appointment",
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                  ),
                 ),
               ],
             ),
@@ -341,20 +225,51 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                 final isSelected = selectedTab == tab;
                 int count = 0;
                 if (tab != 'All') {
-                  if (tab == 'Pending') count = allAppointments.where((app) => app['status'].toString().toLowerCase() == 'pending').length;
-                  if (tab == 'Upcoming') count = allAppointments.where((app) => ["scheduled", "ongoing"].contains(app['status'].toString().toLowerCase())).length;
-                  if (tab == 'Completed') count = allAppointments.where((app) => app['status'].toString().toLowerCase() == 'completed').length;
-                  if (tab == 'Cancelled') count = allAppointments.where((app) => app['status'].toString().toLowerCase() == 'cancelled').length;
+                  if (tab == 'Pending')
+                    count = allAppointments
+                        .where(
+                          (app) =>
+                              app['status'].toString().toLowerCase() ==
+                              'pending',
+                        )
+                        .length;
+                  if (tab == 'Upcoming')
+                    count = allAppointments
+                        .where(
+                          (app) => [
+                            "scheduled",
+                            "ongoing",
+                          ].contains(app['status'].toString().toLowerCase()),
+                        )
+                        .length;
+                  if (tab == 'Completed')
+                    count = allAppointments
+                        .where(
+                          (app) =>
+                              app['status'].toString().toLowerCase() ==
+                              'completed',
+                        )
+                        .length;
+                  if (tab == 'Cancelled')
+                    count = allAppointments
+                        .where(
+                          (app) =>
+                              app['status'].toString().toLowerCase() ==
+                              'cancelled',
+                        )
+                        .length;
                 }
                 return Padding(
                   padding: const EdgeInsets.only(right: 16),
                   child: ChoiceChip(
                     label: Text(
-                        tab + (tab == "All" ? "" : " ($count)"),
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 15,
-                            color: isSelected ? Color(0xFF297EFF) : Colors.black38)),
+                      tab + (tab == "All" ? "" : " ($count)"),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                        color: isSelected ? Color(0xFF297EFF) : Colors.black38,
+                      ),
+                    ),
                     selected: isSelected,
                     selectedColor: Color(0xFFE3EBFA),
                     onSelected: (sel) {
@@ -375,7 +290,9 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
             child: Row(
               children: [
                 Container(
-                  width: MediaQuery.of(context).size.width * 0.5, // half screen width
+                  width:
+                      MediaQuery.of(context).size.width *
+                      0.5, // half screen width
                   decoration: BoxDecoration(
                     color: Color(0xFFF5F7FA),
                     borderRadius: BorderRadius.circular(12),
@@ -410,7 +327,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
               child: Container(
                 decoration: BoxDecoration(
                   color: Color(0xFFF8F9FD),
-                  borderRadius: BorderRadius.circular(32)),
+                  borderRadius: BorderRadius.circular(32),
+                ),
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
@@ -430,77 +348,142 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                         ),
                       ),
                       Divider(height: 1, thickness: 1),
-                      ...filteredAppointments.map((app) => Container(
-                        margin: EdgeInsets.symmetric(vertical: 6, horizontal: 14),
-                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-                        decoration: BoxDecoration(
+                      ...filteredAppointments.map(
+                        (app) => Container(
+                          margin: EdgeInsets.symmetric(
+                            vertical: 6,
+                            horizontal: 14,
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 12,
+                          ),
+                          decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(13)),
-                        child: Row(
-                          children: [
-                            // Patient column
-                            Expanded(
-                              flex: 3,
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 22,
-                                    backgroundImage: AssetImage(app['avatar']),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(app['name'],
-                                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                                      Text("ID: ${app['id']}",
-                                          style: TextStyle(fontSize: 11, color: Colors.grey[600])),
-                                      Text(app['ageGenderBlood'],
-                                          style: TextStyle(fontSize: 11, color: Colors.grey[600])),
-                                    ],
-                                  ),
-                                ],
+                            borderRadius: BorderRadius.circular(13),
+                          ),
+                          child: Row(
+                            children: [
+                              // Patient column
+                              Expanded(
+                                flex: 3,
+                                child: Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 22,
+                                      backgroundImage: AssetImage(
+                                        app['avatar'],
+                                      ),
+                                    ),
+                                    SizedBox(width: 10),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          app['name'],
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                        Text(
+                                          "ID: ${app['id']}",
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            color: Colors.grey[600],
+                                          ),
+                                        ),
+                                        Text(
+                                          app['ageGenderBlood'],
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            color: Colors.grey[600],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            // Contact column
-                            Expanded(
+                              // Contact column
+                              Expanded(
                                 flex: 2,
                                 child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(app['contact'], style: TextStyle(fontSize: 13)),
-                                      Text(app['email'],
-                                          style: TextStyle(fontSize: 11, color: Colors.grey[600])),
-                                    ])),
-                            // Appointment Type
-                            Expanded(flex: 2, child: Text(app['appointmentType'], style: TextStyle(fontSize: 13))),
-                            Expanded(flex: 2, child: Text(app['slot'], style: TextStyle(fontSize: 13))),
-                            Expanded(flex: 2, child: Text(app['mode'], style: TextStyle(fontSize: 13))),
-                            Expanded(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      app['contact'],
+                                      style: TextStyle(fontSize: 13),
+                                    ),
+                                    Text(
+                                      app['email'],
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              // Appointment Type
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  app['appointmentType'],
+                                  style: TextStyle(fontSize: 13),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  app['slot'],
+                                  style: TextStyle(fontSize: 13),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  app['mode'],
+                                  style: TextStyle(fontSize: 13),
+                                ),
+                              ),
+                              Expanded(
                                 flex: 1,
                                 child: Text(
                                   app['status'],
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 13,
-                                      color: _statusColor(app['status'])),
-                                )),
-                            Expanded(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13,
+                                    color: _statusColor(app['status']),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
                                 flex: 3,
                                 child: Wrap(
                                   spacing: 9,
-                                  children: app['actions'].map<Widget>((action) => GestureDetector(
-                                        onTap: () {},
-                                        child: Text(action.toString().toLowerCase(),
+                                  children: app['actions']
+                                      .map<Widget>(
+                                        (action) => GestureDetector(
+                                          onTap: () {},
+                                          child: Text(
+                                            action.toString().toLowerCase(),
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Color(0xFF297EFF),
-                                                fontSize: 13)),
-                                      )).toList(),
-                                )),
-                          ],
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(0xFF297EFF),
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      )),
+                      ),
                     ],
                   ),
                 ),
@@ -513,11 +496,16 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
   }
 
   Widget _tableHeader(String title, int flex) => Expanded(
-        flex: flex,
-        child: Text(title,
-            style: TextStyle(
-                fontWeight: FontWeight.bold, color: Color(0xFF222B45), fontSize: 13)),
-      );
+    flex: flex,
+    child: Text(
+      title,
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+        color: Color(0xFF222B45),
+        fontSize: 13,
+      ),
+    ),
+  );
 
   Color _statusColor(String status) {
     switch (status.toLowerCase()) {
