@@ -57,23 +57,24 @@ class _BillingScreenState extends State<BillingScreen> {
         .toList();
   }
 
+
   @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isMobile = constraints.maxWidth < 600;
-        final isTablet = constraints.maxWidth < 1024;
+Widget build(BuildContext context) {
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      final isMobile = constraints.maxWidth < 600;
 
-        return Container(
-          color: const Color(0xFFF6F8FB),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                // Top Bar
-                _buildTopBar(),
+      return Scaffold(
+        backgroundColor: const Color(0xFFF6F8FB),
+        body: Column(
+          children: [
+            // ✅ FIXED HEADER — TOPMOST
+            _buildTopBar(),
 
-                // Billing Content
-                Padding(
+            // ✅ ONLY THIS PART SCROLLS
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
                   padding: EdgeInsets.all(isMobile ? 16 : 24),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,19 +90,11 @@ class _BillingScreenState extends State<BillingScreen> {
                                   child: FilterChip(
                                     label: Text(tab),
                                     selected: selectedTab == tab,
-                                    onSelected: (selected) {
-                                      setState(() {
-                                        selectedTab = tab;
-                                      });
+                                    onSelected: (_) {
+                                      setState(() => selectedTab = tab);
                                     },
                                     backgroundColor: Colors.grey.shade200,
                                     selectedColor: const Color(0xFFB9D4FF),
-                                    labelStyle: TextStyle(
-                                      color: selectedTab == tab
-                                          ? const Color(0xFF222B45)
-                                          : Colors.grey.shade600,
-                                      fontWeight: FontWeight.w600,
-                                    ),
                                   ),
                                 ),
                               )
@@ -111,20 +104,22 @@ class _BillingScreenState extends State<BillingScreen> {
 
                       const SizedBox(height: 24),
 
-                      // Billing Table or List
+                      // Billing Content
                       isMobile
                           ? _buildMobileBillingList()
                           : _buildBillingTable(),
                     ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-        );
-      },
-    );
-  }
+          ],
+        ),
+      );
+    },
+  );
+}
+
 
   Widget _buildTopBar() {
     return Material(

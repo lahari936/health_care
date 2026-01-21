@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
 import '../widgets/add_new_patient_dialog.dart';
 
+// ================= COLUMN FLEX CONTRACT =================
+const int patientFlex = 2;
+const int contactFlex = 3;
+const int ageFlex = 1;
+const int bloodFlex = 1;
+const int visitFlex = 2;
+const int billingFlex = 1;
+const int upcomingFlex = 2;
+const int actionFlex = 3;
+
 class PatientsListScreen extends StatelessWidget {
   final void Function(String) onSelectPatient;
 
@@ -20,8 +30,8 @@ class PatientsListScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _header(context, isMobile),
-              SizedBox(height: isMobile ? 12 : 20),
-              _patientsCard(isMobile: isMobile),
+              const SizedBox(height: 20),
+              _patientsCard(),
             ],
           ),
         );
@@ -31,79 +41,55 @@ class PatientsListScreen extends StatelessWidget {
 
   // ================= HEADER =================
   Widget _header(BuildContext context, bool isMobile) {
-    return isMobile
-        ? Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Patient Management',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (_) => const AddNewPatientDialog(),
-                    );
-                  },
-                  icon: const Icon(Icons.person_add_alt_1, size: 16),
-                  label: const Text('New Patient'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFE8EBF2),
-                    foregroundColor: Colors.black,
-                    elevation: 0,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          )
-        : Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Patient Management',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-              ),
-              ElevatedButton.icon(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (_) => const AddNewPatientDialog(),
-                  );
-                },
-                icon: const Icon(Icons.person_add_alt_1, size: 18),
-                label: const Text('New Patient'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFE8EBF2),
-                  foregroundColor: Colors.black,
-                  elevation: 0,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 10,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-            ],
-          );
+    if (isMobile) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Patient Management',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 12),
+          SizedBox(width: double.infinity, child: _newPatientButton(context)),
+        ],
+      );
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          'Patient Management',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+        ),
+        _newPatientButton(context),
+      ],
+    );
+  }
+
+  Widget _newPatientButton(BuildContext context) {
+    return ElevatedButton.icon(
+      onPressed: () {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) => const AddNewPatientDialog(),
+        );
+      },
+      icon: const Icon(Icons.person_add_alt_1, size: 18),
+      label: const Text('New Patient'),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color(0xFF297EFF),
+        foregroundColor: Colors.white,
+        elevation: 0,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
   }
 
   // ================= MAIN CARD =================
-  Widget _patientsCard({bool isMobile = false}) {
+  Widget _patientsCard() {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -124,46 +110,56 @@ class PatientsListScreen extends StatelessWidget {
     );
   }
 
-  // ================= SEARCH =================
+  // ================= SEARCH + FILTER =================
   Widget _searchAndFilter() {
-    return Row(
-      children: [
-        Expanded(
-          child: TextField(
-            decoration: InputDecoration(
-              hintText: 'Search Patients...',
-              prefixIcon: const Icon(Icons.search),
-              filled: true,
-              fillColor: const Color(0xFFF2F4F8),
-              isDense: true,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide.none,
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: SizedBox(
+        width: 520,
+        child: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Search Patients...',
+                  hintStyle: const TextStyle(fontSize: 12),
+                  prefixIcon: const Icon(Icons.search),
+                  filled: true,
+                  fillColor: const Color(0xFFF2F4F8),
+                  isDense: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF2F4F8),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<String>(
-              value: 'All Patients',
-              items: const [
-                DropdownMenuItem(
-                  value: 'All Patients',
-                  child: Text('All Patients'),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF2F4F8),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-              ],
-              onChanged: (_) {},
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    value: 'All Patients',
+                    items: const [
+                      DropdownMenuItem(
+                        value: 'All Patients',
+                        child: Text('All Patients'),
+                      ),
+                    ],
+                    onChanged: (_) {},
+                  ),
+                ),
+              ),
             ),
-          ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
@@ -173,14 +169,14 @@ class PatientsListScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
         children: const [
-          _HeaderCell('Patient', flex: 3),
-          _HeaderCell('Contact', flex: 2),
-          _HeaderCell('Age / Gender'),
-          _HeaderCell('Blood Group'),
-          _HeaderCell('Last Visit'),
-          _HeaderCell('Billing Status'),
-          _HeaderCell('Upcoming Visit'),
-          _HeaderCell('Quick Actions', flex: 2),
+          _HeaderCell('Patient', flex: patientFlex),
+          _HeaderCell('Contact', flex: contactFlex),
+          _HeaderCell('Age / Gender', flex: ageFlex),
+          _HeaderCell('Blood Group', flex: bloodFlex),
+          _HeaderCell('Last Visit', flex: visitFlex),
+          _HeaderCell('Billing Status', flex: billingFlex),
+          _HeaderCell('Upcoming Visit', flex: upcomingFlex),
+          _HeaderCell('Quick Actions', flex: actionFlex),
         ],
       ),
     );
@@ -196,14 +192,15 @@ class PatientsListScreen extends StatelessWidget {
           border: Border(bottom: BorderSide(color: Color(0xFFEAEAEA))),
         ),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Patient
+            // PATIENT
             Expanded(
-              flex: 3,
+              flex: patientFlex,
               child: Row(
                 children: [
                   const CircleAvatar(
-                    radius: 18,
+                    radius: 16,
                     backgroundImage: NetworkImage(
                       'https://i.pravatar.cc/150?img=32',
                     ),
@@ -214,13 +211,16 @@ class PatientsListScreen extends StatelessWidget {
                     children: [
                       Text(
                         name,
-                        style: const TextStyle(fontWeight: FontWeight.w600),
+                        style: const TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                       const SizedBox(height: 2),
                       Text(
                         'ID: $id',
                         style: const TextStyle(
-                          fontSize: 12,
+                          fontSize: 11,
                           color: Colors.grey,
                         ),
                       ),
@@ -230,28 +230,26 @@ class PatientsListScreen extends StatelessWidget {
               ),
             ),
 
-            // Contact
-            const _Cell(text: '+1-555-0123\nemily.davis@email.com'),
+            const _TableCell(
+              text: '+1-555-0123\nemily.davis@email.com',
+              flex: contactFlex,
+            ),
+            const _TableCell(text: '33 / F', flex: ageFlex),
+            const _TableCell(text: 'B+ve', flex: bloodFlex),
+            const _TableCell(text: '14/08/2025', flex: visitFlex),
+            const _TableCell(text: 'Paid', flex: billingFlex),
+            const _TableCell(text: '27/09/2025', flex: upcomingFlex),
 
-            const _Cell(text: '33 / F'),
-            const _Cell(text: 'B+ve'),
-            const _Cell(text: '14/08/2025'),
-            const _Cell(text: 'Paid'),
-            const _Cell(text: '27/09/2025'),
-
-            // Actions
+            // ACTIONS
             Expanded(
-              flex: 2,
+              flex: actionFlex,
               child: Row(
-                children: [
-                  GestureDetector(
-                    onTap: () => onSelectPatient(id),
-                    child: const _ActionLink('view'),
-                  ),
-                  const SizedBox(width: 10),
-                  const _ActionLink('contact'),
-                  const SizedBox(width: 10),
-                  const _ActionLink('schedule'),
+                children: const [
+                  _ActionLink('view'),
+                  SizedBox(width: 12),
+                  _ActionLink('contact'),
+                  SizedBox(width: 12),
+                  _ActionLink('schedule'),
                 ],
               ),
             ),
@@ -268,32 +266,47 @@ class _HeaderCell extends StatelessWidget {
   final String text;
   final int flex;
 
-  const _HeaderCell(this.text, {this.flex = 1});
+  const _HeaderCell(this.text, {required this.flex});
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       flex: flex,
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-          color: Colors.grey,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4),
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+            color: Colors.grey,
+          ),
         ),
       ),
     );
   }
 }
 
-class _Cell extends StatelessWidget {
+class _TableCell extends StatelessWidget {
   final String text;
+  final int flex;
 
-  const _Cell({required this.text});
+  const _TableCell({required this.text, required this.flex});
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(child: Text(text, style: const TextStyle(fontSize: 13)));
+    return Expanded(
+      flex: flex,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4),
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 10),
+        ),
+      ),
+    );
   }
 }
 

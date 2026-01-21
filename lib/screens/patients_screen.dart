@@ -120,7 +120,7 @@ class _PatientsScreenState extends State<PatientsScreen>
             const Text(
               'Olivia Bennett',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 11,
                 fontWeight: FontWeight.w600,
                 height: 1.15,
               ),
@@ -130,7 +130,7 @@ class _PatientsScreenState extends State<PatientsScreen>
               'Patient ID: ${widget.patientId}',
               style: const TextStyle(
                 color: Colors.grey,
-                fontSize: 13,
+                fontSize: 11,
                 height: 1.1,
               ),
             ),

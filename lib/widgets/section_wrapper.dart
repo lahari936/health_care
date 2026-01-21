@@ -9,7 +9,7 @@ class SectionWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(28),
+      padding: const EdgeInsets.fromLTRB(28, 16, 28, 16),
       decoration: BoxDecoration(
         color: backgroundColor ?? const Color(0xFF2596BE),
         borderRadius: BorderRadius.circular(22),

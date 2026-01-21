@@ -140,7 +140,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 color: Color(0xFF222B45),
                               ),
                             ),
-                            const SizedBox(height: 22),
+                            const SizedBox(height: 12),
                             // OVERVIEW CARDS SPREAD EVENLY, HEIGHT 160
                             Row(
                               children: [
@@ -220,19 +220,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       Padding(
                                         padding: const EdgeInsets.fromLTRB(
                                           6,
-                                          18,
+                                          4,
                                           6,
                                           8,
                                         ),
                                         child: Text(
                                           'Notifications',
                                           style: GoogleFonts.inter(
-                                            fontSize: 18,
+                                            fontSize: 25,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(height: 12),
+                                      const SizedBox(height: 8),
                                       Container(
                                         width: double.infinity,
                                         height: 220,
@@ -417,19 +417,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       Padding(
                                         padding: const EdgeInsets.fromLTRB(
                                           6,
-                                          18,
+                                          4,
                                           6,
                                           8,
                                         ),
                                         child: Text(
                                           'Quick Actions',
                                           style: GoogleFonts.inter(
-                                            fontSize: 18,
+                                            fontSize: 25,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(height: 12),
+                                      const SizedBox(height: 8),
                                       QuickActionsCard(
                                         openAddAppointment: () =>
                                             _openAddAppointmentPopup(context),
@@ -636,7 +636,7 @@ class _ScheduleTableState extends State<ScheduleTable> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(5, 8, 32, 8),
+          padding: const EdgeInsets.fromLTRB(5, 4, 32, 8),
           child: Row(
             children: [
               Text(
@@ -806,7 +806,7 @@ class QuickActionsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 200,
+      height: 180,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(15),
@@ -858,20 +858,26 @@ class QuickActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: double.infinity,
+      //width: double.infinity,
       child: OutlinedButton.icon(
         onPressed: onTap,
+        //alignment: Alignment.centerLeft,
         icon: Icon(icon, size: 19, color: Color(0xFF2F2F2F)),
-        label: Text(
-          text,
-          style: GoogleFonts.inter(
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF2F2F2F),
-            fontSize: 14,
+        label: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            text,
+
+            style: GoogleFonts.inter(
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF2F2F2F),
+              fontSize: 14,
+            ),
           ),
         ),
         style: OutlinedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 13),
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.symmetric(vertical: 11),
           backgroundColor: const Color(0xFFF7F8FA),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),

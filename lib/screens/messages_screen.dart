@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 
-class MessagesScreen extends StatelessWidget {
+class MessagesScreen extends StatefulWidget {
   const MessagesScreen({Key? key}) : super(key: key);
+
+  @override
+  State<MessagesScreen> createState() => _MessagesScreenState();
+}
+
+class _MessagesScreenState extends State<MessagesScreen> {
+  String? selectedChat; // 👈 NO CHAT SELECTED INITIALLY
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +24,7 @@ class MessagesScreen extends StatelessWidget {
             children: [
               const Text(
                 'Messages',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 16),
               Expanded(
@@ -33,16 +37,15 @@ class MessagesScreen extends StatelessWidget {
                   child: Row(
                     children: [
                       // ================= LEFT CHAT LIST =================
-                      SizedBox(
-                        width: isWide ? 280 : 220,
-                        child: _chatList(),
-                      ),
+                      SizedBox(width: isWide ? 280 : 220, child: _chatList()),
 
                       const VerticalDivider(width: 32),
 
-                      // ================= CHAT WINDOW =================
+                      // ================= RIGHT PANEL =================
                       Expanded(
-                        child: _chatWindow(),
+                        child: selectedChat == null
+                            ? _emptyChatState()
+                            : _chatWindow(),
                       ),
                     ],
                   ),
@@ -62,6 +65,7 @@ class MessagesScreen extends StatelessWidget {
         TextField(
           decoration: InputDecoration(
             hintText: 'Search Patients...',
+            hintStyle: const TextStyle(fontSize: 12),
             prefixIcon: const Icon(Icons.search),
             filled: true,
             fillColor: const Color(0xFFF2F4F8),
@@ -77,7 +81,14 @@ class MessagesScreen extends StatelessWidget {
           child: ListView.builder(
             itemCount: 10,
             itemBuilder: (_, index) {
-              return _chatListItem(isActive: index == 0);
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    selectedChat = 'Emily Davis'; // 👈 OPEN CHAT
+                  });
+                },
+                child: _chatListItem(isActive: selectedChat != null),
+              );
             },
           ),
         ),
@@ -97,15 +108,13 @@ class MessagesScreen extends StatelessWidget {
         children: [
           const CircleAvatar(
             radius: 18,
-            backgroundImage: NetworkImage(
-              'https://i.pravatar.cc/150?img=32',
-            ),
+            backgroundImage: NetworkImage('https://i.pravatar.cc/150?img=32'),
           ),
           const SizedBox(width: 10),
-          Expanded(
+          const Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text(
                   'Emily Davis',
                   style: TextStyle(fontWeight: FontWeight.w600),
@@ -123,7 +132,33 @@ class MessagesScreen extends StatelessWidget {
     );
   }
 
-  // ================= RIGHT: CHAT WINDOW =================
+  // ================= EMPTY STATE =================
+  Widget _emptyChatState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          Icon(Icons.chat_bubble_outline, size: 64, color: Colors.grey),
+          SizedBox(height: 16),
+          Text(
+            'No recent chats',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey,
+            ),
+          ),
+          SizedBox(height: 6),
+          Text(
+            'Select a contact to start messaging',
+            style: TextStyle(color: Colors.grey),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ================= CHAT WINDOW =================
   Widget _chatWindow() {
     return Column(
       children: [
@@ -143,17 +178,17 @@ class MessagesScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
-            children: [
-              const CircleAvatar(
+            children: const [
+              CircleAvatar(
                 radius: 20,
                 backgroundImage: NetworkImage(
                   'https://i.pravatar.cc/150?img=32',
                 ),
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text(
                     'Emily Davis',
                     style: TextStyle(fontWeight: FontWeight.w600),
@@ -184,19 +219,9 @@ class MessagesScreen extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: const [
-        _CenterProfile(),
-        _ReceivedMessage(
-          text:
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
-        ),
-        _SentMessage(
-          text:
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        ),
-        _ReceivedMessage(
-          text:
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.',
-        ),
+        _ReceivedMessage(text: 'Hello Doctor'),
+        _SentMessage(text: 'Hi Emily, how can I help?'),
+        _ReceivedMessage(text: 'I need prescription advice'),
       ],
     );
   }
@@ -234,7 +259,6 @@ class MessagesScreen extends StatelessWidget {
 
 class _SentMessage extends StatelessWidget {
   final String text;
-
   const _SentMessage({required this.text});
 
   @override
@@ -259,7 +283,6 @@ class _SentMessage extends StatelessWidget {
 
 class _ReceivedMessage extends StatelessWidget {
   final String text;
-
   const _ReceivedMessage({required this.text});
 
   @override
@@ -273,49 +296,7 @@ class _ReceivedMessage extends StatelessWidget {
           color: const Color(0xFFF2F4F8),
           borderRadius: BorderRadius.circular(14),
         ),
-        child: Text(
-          text,
-          style: const TextStyle(fontSize: 13),
-        ),
-      ),
-    );
-  }
-}
-
-class _CenterProfile extends StatelessWidget {
-  const _CenterProfile();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
-      child: Column(
-        children: const [
-          CircleAvatar(
-            radius: 30,
-            backgroundImage: NetworkImage(
-              'https://i.pravatar.cc/150?img=32',
-            ),
-          ),
-          SizedBox(height: 8),
-          Text(
-            'Emily Davis',
-            style: TextStyle(fontWeight: FontWeight.w600),
-          ),
-          Text(
-            'ID: PAT - 001 | 33 / F | B+ve',
-            style: TextStyle(fontSize: 12, color: Colors.grey),
-          ),
-          SizedBox(height: 6),
-          Text(
-            'View Profile',
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.blue,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
+        child: Text(text, style: const TextStyle(fontSize: 13)),
       ),
     );
   }
